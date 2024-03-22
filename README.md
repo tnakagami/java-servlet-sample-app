@@ -8,7 +8,7 @@ In this application, I assume the two conditions.
       Note: Please enter the command `uname -a` on your terminal to check kernel version.
 
 ## Preparations
-### Step1: Create `.env` file in the `database` directory.
+### Step1: Create `.env` file in the `database` directory
 Please check the [README.md](./database/README.md) for detail.
 
 ### Step2: Build images
@@ -39,7 +39,7 @@ mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=
 | `groupId`    | package name      | `app.sample` |
 | `artifactId` | architecture name | `sample-app` |
 
-The execution results of the command are shown below.
+The execution results of the above command are shown below.
 
 ```bash
 # --- example of output ---
@@ -85,7 +85,9 @@ cd maven/project/sample-app
 mkdir -p src/main/java
 ```
 
-Then, open XML file of `pom.xml` on your favorite editor, and add these sentences between `<dependencies>` and `</dependencies>`.
+Next, open XML file of `pom.xml` on your favorite editor. (In my case, I will use "vim".)
+
+Then, add these sentences between `<dependencies>` and `</dependencies>`.
 
 ```xml
     <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -164,29 +166,16 @@ Also add these following sentences between `<build>` and `</build>`.
     </plugins>
 ```
 
-### Step5: Develop web application by using Java Servlet
-In the `maven/project/sample-app/src/main`, store Java's source files in the `java` directory and JSP (Java Servlet Pages) files in the `webapp` directory.
+### Step5: Develop your web applications by using Java Servlet
+In the `maven/project/sample-app/src/main` directory, store Java's source files in the `java` directory and JSP (Java Servlet Pages) files in the `webapp` directory.
 
-```bash
-# For example
-cd maven/project/sample-app/src/main
-touch java/HelloWorld.java
-touch webapp/index.jsp
+Sample codes are stored in the [examples](./examples) directory.
 
-# Develop HelloWorld application until you are satisfied.
-```
-
-### Step6: Compile source code
+### Step6: Compile source codes
 Run the following command.
 
 ```bash
-# In the host environment
-docker-compose run --rm maven-server /bin/bash
-# In the container environment of maven
-cd sample-app
-mvn clean package
-exit
-# Come back to the host environment
+docker-compose run --rm maven-server /bin/bash compile.sh
 ```
 
 Then, copy `*.war` file to `servlet/webapps`. For details, see the following command.

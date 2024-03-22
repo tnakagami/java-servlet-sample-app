@@ -36,8 +36,6 @@ services:
       dockerfile: Dockerfile
     image: custom.maven
     container_name: maven-server
-    env_file:
-      - database/.env
     environment:
       - MAVEN_CONFIG=/var/maven/.m2
     volumes:
