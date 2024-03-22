@@ -1,0 +1,77 @@
+version: '3.7'
+
+x-logging:
+  &json-logging
+  driver: json-file
+  options:
+    max-size: "10k"
+    max-file: "3"
+
+services:
+  servlet-server:
+    build:
+      context: ./servlet
+      dockerfile: Dockerfile
+    image: custom.servlet
+    container_name: servlet-server
+    env_file:
+      - database/.env
+    environment:
+      - SERVLET_DATABASE_HOST=database-server
+      - TZ=Asia/Tokyo
+    #volumes:
+    #  - ./servlet/webapps/sample.war:/usr/local/tomcat/webapps/sample.war
+    logging: *json-logging
+    ports:
+      - 16384:8080
+    networks:
+      - appnet
+    depends_on:
+      - database
+    restart: always
+
+  maven-server:
+    build:
+      context: ./maven
+      dockerfile: Dockerfile
+    image: custom.maven
+    container_name: maven-server
+    env_file:
+      - database/.env
+    environment:
+      - MAVEN_CONFIG=/var/maven/.m2
+    volumes:
+      - ./maven/m2:/var/maven/.m2
+      - ./maven/project:/var/maven/app
+    logging: *json-logging
+    networks:
+      - appnet
+    user: usermvn
+    working_dir: /var/maven/app
+
+  database-server:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    image: custom.database
+    container_name: database-server
+    env_file:
+      - database/.env
+    environment:
+      - TZ=Asia/Tokyo
+    volumes:
+      - database:/var/lib/mysql
+    logging: *json-logging
+    expose:
+      - 3306
+    networks:
+      - appnet
+    restart: always
+
+volumes:
+    database:
+      name: sample-app
+
+networks:
+  appnet:
+    name: appnet
