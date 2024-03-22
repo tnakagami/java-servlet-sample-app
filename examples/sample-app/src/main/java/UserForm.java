@@ -48,19 +48,19 @@ public class UserForm extends HttpServlet {
           response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bab Request");
           return;
         }
-        //! Get Valid Roles
-        List<Role> roles = Role.getValidRoles();
-        //! Setup as attributes
-        request.setAttribute("error", null);
-        request.setAttribute("action", request.getRequestURI());
-        request.setAttribute("name", name);
-        request.setAttribute("role", role);
-        request.setAttribute("roles", roles);
-        //! Page transition process
-        ServletContext context = this.getServletContext();
-        RequestDispatcher dispather = context.getRequestDispatcher("/sample/user_form.jsp");
-        dispather.forward(request, response);
       }
+      //! Get Valid Roles
+      List<Role> roles = Role.getValidRoles();
+      //! Setup as attributes
+      request.setAttribute("error", null);
+      request.setAttribute("action", request.getRequestURI());
+      request.setAttribute("name", name);
+      request.setAttribute("role", role);
+      request.setAttribute("roles", roles);
+      //! Page transition process
+      ServletContext context = this.getServletContext();
+      RequestDispatcher dispather = context.getRequestDispatcher("/sample/user_form.jsp");
+      dispather.forward(request, response);
     }
     //! In the case of not being set user id
     else {

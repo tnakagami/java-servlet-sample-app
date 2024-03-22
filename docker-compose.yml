@@ -19,8 +19,6 @@ services:
     environment:
       - SERVLET_DATABASE_HOST=database-server
       - TZ=Asia/Tokyo
-    #volumes:
-    #  - ./servlet/webapps/sample.war:/usr/local/tomcat/webapps/sample.war
     logging: *json-logging
     ports:
       - 16384:8080
@@ -29,6 +27,9 @@ services:
     depends_on:
       - database-server
     restart: always
+    extends:
+      file: servlet/docker-compose-volume.yml
+      service: custom-servlet-server
 
   maven-server:
     build:

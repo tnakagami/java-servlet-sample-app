@@ -1,5 +1,4 @@
-# How to use this example of `sample-app`
-## Preparations
+## How to use this example of `sample-app`
 ### Step1: Create a database and an user to operate it
 Run the following command.
 
@@ -7,7 +6,7 @@ Run the following command.
 docker-compose up -d database-server
 ```
 
-After waiting for about 15sec, enter the next command to destroy the database-server's container.
+After waiting for about **15sec**, enter the next command to destroy the database-server's container.
 
 ```bash
 docker-compose down

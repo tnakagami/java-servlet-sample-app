@@ -140,6 +140,7 @@ public class User implements Serializable {
         int role = resultSet.getInt("role");
         //! Create User's instance
         User user = new User(name, role);
+        user.id = id;
         //! Add instance to list
         users.add(user);
       }

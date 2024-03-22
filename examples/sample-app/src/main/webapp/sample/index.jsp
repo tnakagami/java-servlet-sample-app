@@ -35,7 +35,7 @@
           <%
             String urlPattern = "#";
 
-            if (users.size(0) > 0) {
+            if (users.size() > 0) {
               User user = users.get(0);
               urlPattern = String.format("/sample-app/user/%d", user.getID());
             }

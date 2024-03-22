@@ -26,9 +26,7 @@ In the host environment, enter the following command in your terminal.
 docker-compose run --rm maven-server /bin/bash
 ```
 
-Next, in the container (at docker environment), execute the following commands, where the `groupId` and `artifactId` mean package name and architecture name.
-
-Also, you will be able to access to `http://server-ip-address:16384/sample-app` by the time you finish reading this README.md.
+Next, in the container (at docker environment), execute the following command, where the `groupId` and `artifactId` mean package name and architecture name.
 
 ```bash
 mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=sample-app -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp
@@ -85,7 +83,7 @@ cd maven/project/sample-app
 mkdir -p src/main/java
 ```
 
-Next, open XML file of `pom.xml` on your favorite editor. (In my case, I will use "vim".)
+Next, open `pom.xml` file on your favorite editor. (In my case, I will use "vim".)
 
 Then, add these sentences between `<dependencies>` and `</dependencies>`.
 
@@ -181,23 +179,12 @@ docker-compose run --rm maven-server /bin/bash compile.sh
 Then, copy `*.war` file to `servlet/webapps`. For details, see the following command.
 
 ```bash
+# In the case of having compiled the sample-app
 cp -f maven/project/sample-app/target/sample-app.war servlet/webapps
 ```
 
-Finally, modify the `docker-compose.yml` at line 22-23.
-
-```yml
-# *** before ***
-    #volumes:
-    #  - ./servlet/webapps/sample.war:/usr/local/tomcat/webapps/sample.war
-
-# *** after ***
-    volumes:
-      - ./servlet/webapps/sample.war:/usr/local/tomcat/webapps/sample.war
-```
-
 ## Execution
-Execute the following commands to start tomcat server and database server.
+Execute the following commands to start servlet-server and database-server.
 
 ```bash
 # To destroy the old containers
@@ -206,4 +193,9 @@ docker-compose down
 docker-compose up -d
 ```
 
-Then, access to `http://server-ip-addres:16384/sample-app` to check your web application.
+Then, access to `http://server-ip-addres:16384/artifactId` to check the operation of your web application.
+
+```bash
+# For example, in the case of sample-app launched on a server whose IP address is 192.168.0.2
+http://192.168.0.2:16384/sample-app
+```
