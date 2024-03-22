@@ -31,6 +31,7 @@ replay_pid*
 env/
 env.bak/
 # Docker volumes
-maven/m2/
+maven/m2/*
+!maven/m2/.gitkeep
 servlet/webapps/*
 !servlet/webapps/.gitkeep

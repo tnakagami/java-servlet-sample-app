@@ -23,7 +23,7 @@ docker-compose build
 In the host environment, enter the following command in your terminal.
 
 ```bash
-docker-compose run --rm maven /bin/bash
+docker-compose run --rm maven-server /bin/bash
 ```
 
 Then, in the container (at docker environment), execute the following commands.
@@ -174,7 +174,7 @@ Run the following command.
 
 ```bash
 # In the host environment
-docker-compose run --rm maven /bin/bash
+docker-compose run --rm maven-server /bin/bash
 # In the container environment of maven
 cd sample-app
 mvn clean package
