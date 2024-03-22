@@ -30,8 +30,8 @@ Then, in the container (at docker environment), execute the following commands.
 Also, you will be able to access to `http://server-ip-address:16384/sample-app` by the time you finish reading this README.md.
 
 ```bash
-# groupId:    package name and package name, for example "app.sample"
-# artifactId: architecture name,             for example "sample-app"
+# groupId:    package name,      for example "app.sample"
+# artifactId: architecture name, for example "sample-app"
 mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=sample-app -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp
 
 # --- example of output ---
@@ -71,7 +71,7 @@ exit
 ```
 
 ### Step4: Setup the project to use maven
-In the host environment, enter the commands in your terminal to change directory and create directories.
+In the host environment, to change directory and create directories, enter the following commands in your terminal.
 
 ```bash
 cd maven/project/sample-app
@@ -158,7 +158,16 @@ Also add these following sentences between `<build>` and `</build>`.
 ```
 
 ### Step5: Develop web application by using Java Servlet
-In the `maven/project/sample-app/src/main`, store Java's source files in the `./java` and JSP (Java Servlet Pages) files in the `./webapp`.
+In the `maven/project/sample-app/src/main`, store Java's source files in the `java` directory and JSP (Java Servlet Pages) files in the `webapp` directory.
+
+```bash
+# For example
+cd maven/project/sample-app/src/main
+touch java/HelloWorld.java
+touch webapp/index.jsp
+
+# Develop HelloWorld application until you are satisfied.
+```
 
 ### Step6: Compile source code
 Run the following command.
