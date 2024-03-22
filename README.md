@@ -8,11 +8,11 @@ In this application, I assume the two conditions.
       Note: Please enter the command `uname -a` on your terminal to check kernel version.
 
 ## Preparations
-### Step1: Create `.env` file in the `database` directory.
+### Step1: Create `.env` file in the `database` directory
 Please check the [README.md](./database/README.md) for detail.
 
 ### Step2: Build images
-Run the following command to create docker images.
+First, run the following command to create docker images.
 
 ```bash
 # Current directory: java-servlet-sample-app
@@ -23,17 +23,23 @@ docker-compose build
 In the host environment, enter the following command in your terminal.
 
 ```bash
-docker-compose run --rm maven /bin/bash
+docker-compose run --rm maven-server /bin/bash
 ```
 
-Then, in the container (at docker environment), execute the following commands.
-Also, you will be able to access to `http://server-ip-address:16384/sample-app` by the time you finish reading this README.md.
+Next, in the container (at docker environment), execute the following command, where the `groupId` and `artifactId` mean package name and architecture name.
 
 ```bash
-# groupId:    package name,      for example "app.sample"
-# artifactId: architecture name, for example "sample-app"
 mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=sample-app -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp
+```
 
+| Item         | Detail            | Example      |
+| :----        | :----             | :----        |
+| `groupId`    | package name      | `app.sample` |
+| `artifactId` | architecture name | `sample-app` |
+
+The execution results of the above command are shown below.
+
+```bash
 # --- example of output ---
 #   [INFO] Using property: groupId = app.sample
 #   [INFO] Using property: artifactId = sample-app
@@ -65,10 +71,9 @@ mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=
 #   [INFO] Finished at: 2000-03-31T11:11:11Z
 #   [INFO] ------------------------------------------------------------------------
 # --- end of output ---
-
-exit
-# Come back to the host environment
 ```
+
+Then, to come back to the host environment, type `exit` or press `Ctrl + D`.
 
 ### Step4: Setup the project to use maven
 In the host environment, to change directory and create directories, enter the following commands in your terminal.
@@ -78,7 +83,9 @@ cd maven/project/sample-app
 mkdir -p src/main/java
 ```
 
-Then, open XML file of `pom.xml` on your favorite editor, and add these sentences between `<dependencies>` and `</dependencies>`.
+Next, open `pom.xml` file on your favorite editor. (In my case, I will use "vim".)
+
+Then, add these sentences between `<dependencies>` and `</dependencies>`.
 
 ```xml
     <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -157,54 +164,38 @@ Also add these following sentences between `<build>` and `</build>`.
     </plugins>
 ```
 
-### Step5: Develop web application by using Java Servlet
-In the `maven/project/sample-app/src/main`, store Java's source files in the `java` directory and JSP (Java Servlet Pages) files in the `webapp` directory.
+### Step5: Develop your web applications by using Java Servlet
+In the `maven/project/sample-app/src/main` directory, store Java's source files in the `java` directory and JSP (Java Servlet Pages) files in the `webapp` directory.
 
-```bash
-# For example
-cd maven/project/sample-app/src/main
-touch java/HelloWorld.java
-touch webapp/index.jsp
+Sample codes are stored in the [examples](./examples) directory.
 
-# Develop HelloWorld application until you are satisfied.
-```
-
-### Step6: Compile source code
+### Step6: Compile source codes
 Run the following command.
 
 ```bash
-# In the host environment
-docker-compose run --rm maven /bin/bash
-# In the container environment of maven
-cd sample-app
-mvn clean package
-exit
-# Come back to the host environment
+docker-compose run --rm maven-server /bin/bash compile.sh
 ```
 
 Then, copy `*.war` file to `servlet/webapps`. For details, see the following command.
 
 ```bash
+# In the case of having compiled the sample-app
 cp -f maven/project/sample-app/target/sample-app.war servlet/webapps
 ```
 
-Finally, modify the `docker-compose.yml` at line 22-23.
-
-```yml
-# *** before ***
-    #volumes:
-    #  - ./servlet/webapps/sample.war:/usr/local/tomcat/webapps/sample.war
-
-# *** after ***
-    volumes:
-      - ./servlet/webapps/sample.war:/usr/local/tomcat/webapps/sample.war
-```
-
 ## Execution
-Execute the following command to start tomcat server and database server.
+Execute the following commands to start servlet-server and database-server.
 
 ```bash
+# To destroy the old containers
+docker-compose down
+# To create the containers
 docker-compose up -d
 ```
 
-Then, access to `http://server-ip-addres:16384/sample-app` to check your web application.
+Then, access to `http://server-ip-addres:16384/artifactId` to check the operation of your web application.
+
+```bash
+# For example, in the case of sample-app launched on a server whose IP address is 192.168.0.2
+http://192.168.0.2:16384/sample-app
+```

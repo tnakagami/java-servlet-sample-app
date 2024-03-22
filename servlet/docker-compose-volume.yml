@@ -1,0 +1,4 @@
+services:
+  custom-servlet-server:
+    volumes:
+      - ./webapps/sample-app.war:/usr/local/tomcat/webapps/sample-app.war
