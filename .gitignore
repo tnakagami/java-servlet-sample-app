@@ -33,5 +33,7 @@ env.bak/
 # Docker volumes
 maven/m2/*
 !maven/m2/.gitkeep
+maven/project/*
+!maven/project/compile.sh
 servlet/webapps/*
 !servlet/webapps/.gitkeep

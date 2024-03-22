@@ -12,7 +12,7 @@ In this application, I assume the two conditions.
 Please check the [README.md](./database/README.md) for detail.
 
 ### Step2: Build images
-Run the following command to create docker images.
+First, run the following command to create docker images.
 
 ```bash
 # Current directory: java-servlet-sample-app
@@ -26,14 +26,22 @@ In the host environment, enter the following command in your terminal.
 docker-compose run --rm maven-server /bin/bash
 ```
 
-Then, in the container (at docker environment), execute the following commands.
+Next, in the container (at docker environment), execute the following commands, where the `groupId` and `artifactId` mean package name and architecture name.
+
 Also, you will be able to access to `http://server-ip-address:16384/sample-app` by the time you finish reading this README.md.
 
 ```bash
-# groupId:    package name,      for example "app.sample"
-# artifactId: architecture name, for example "sample-app"
 mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=sample-app -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp
+```
 
+| Item         | Detail            | Example      |
+| :----        | :----             | :----        |
+| `groupId`    | package name      | `app.sample` |
+| `artifactId` | architecture name | `sample-app` |
+
+The execution results of the command are shown below.
+
+```bash
 # --- example of output ---
 #   [INFO] Using property: groupId = app.sample
 #   [INFO] Using property: artifactId = sample-app
@@ -65,10 +73,9 @@ mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=
 #   [INFO] Finished at: 2000-03-31T11:11:11Z
 #   [INFO] ------------------------------------------------------------------------
 # --- end of output ---
-
-exit
-# Come back to the host environment
 ```
+
+Then, to come back to the host environment, type `exit` or press `Ctrl + D`.
 
 ### Step4: Setup the project to use maven
 In the host environment, to change directory and create directories, enter the following commands in your terminal.
