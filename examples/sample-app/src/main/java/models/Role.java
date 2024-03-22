@@ -1,4 +1,4 @@
-import app.sample.models;
+package app.sample.models;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -13,13 +13,23 @@ public enum Role {
   Viewer("Viewer", 3),
   ;
 
-  //! Enum's label name
+  //! role name
   private String label;
-  //! Enum's id
+  //! role id
   private int id;
 
   /**
-   * @brief Get Enum's label
+   * @brief constructor
+   * @param[in] String label role name
+   * @param[in] int id role id
+   */
+  private Role(String label, int id) {
+    this.label = label;
+    this.id = id;
+  }
+
+  /**
+   * @brief Get role label
    * @return String label
    */
   public String getLabel() {
@@ -27,7 +37,7 @@ public enum Role {
   }
 
   /**
-   * @brief Get Enum's id
+   * @brief Get role id
    * @return int id
    */
   public int getID() {
@@ -54,7 +64,7 @@ public enum Role {
   }
 
   /**
-   * @brief Get Role matching id
+   * @brief Get Role of matching id
    * @param[in] id
    * @return Role result matched Role
    */

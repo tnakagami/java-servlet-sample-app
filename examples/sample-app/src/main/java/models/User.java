@@ -1,4 +1,4 @@
-import app.sample.models;
+package app.sample.models;
 
 import java.io.Serializable;
 import java.lang.RuntimeException;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 //! local package
 import app.sample.models.Role;
 
-public static User implements Serializable {
+public class User implements Serializable {
   private static final long serialVersionUID = 1L;
   private final int MAX_USERNAME_LEN = 255;
   //! user id
@@ -56,7 +56,7 @@ public static User implements Serializable {
    * @brief Get username
    * @return String name
    */
-  public int getName() {
+  public String getName() {
     return name;
   }
 
@@ -88,11 +88,12 @@ public static User implements Serializable {
 
   /**
    * @brief The function to update user's information
+   * @param[in] int id user id
    * @param[in] String name username
    * @param[in] int role user's role
    * @return User matched user's instance
    */
-  public static User updateUser(String name, int role) throws RuntimeException, SQLException {
+  public static User updateUser(int id, String name, int role) throws RuntimeException, SQLException {
     User user = new User(name, role);
     String sql = String.format("UPDATE User SET name='%s', role=%d WHERE id = %d ;", user.name, user.role.getID(), id);
     helper.setRecord(sql);

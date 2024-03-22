@@ -1,4 +1,4 @@
-import app.sample.models;
+package app.sample.models;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,7 +38,6 @@ public class DatabaseHelper {
    * @return Resultset resultSet matched records
    */
   public ResultSet getRecords(String query) throws SQLException {
-    ResultSet resultSet = null;
     Statement statement = connection.createStatement();
     ResultSet resultSet = statement.executeQuery(query);
 

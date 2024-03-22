@@ -1,4 +1,4 @@
-import app.sample.utils;
+package app.sample.utils;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -39,7 +39,7 @@ public class ParseUrl {
       Matcher match = pattern.matcher(path);
 
       if (match.matches()) {
-        id = Interger.parseInt(match.group(1));
+        id = Integer.parseInt(match.group(1));
         state = UPDATE_RECORD;
       }
     }

@@ -1,4 +1,4 @@
-import app.sample;
+package app.sample;
 
 import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;

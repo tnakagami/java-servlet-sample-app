@@ -1,4 +1,4 @@
-import app.sample;
+package app.sample;
 
 import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;
@@ -32,13 +32,14 @@ public class UserForm extends HttpServlet {
     //! In the case of being set user id
     if (!urlState.isInvalid()) {
       String name = "";
-      Role role = Role.Normal;
+      Role role = Role.Viewer;
 
       if (!urlState.isCreation()) {
         List<User> users = User.getUsers(String.format("WHERE id = %d", urlState.getID()));
 
         //! In the case of valid user id
         if (users.size() > 0) {
+          User user = users.get(0);
           name = user.getName();
           role = user.getRole();
         }

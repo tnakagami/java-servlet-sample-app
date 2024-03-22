@@ -197,9 +197,12 @@ Finally, modify the `docker-compose.yml` at line 22-23.
 ```
 
 ## Execution
-Execute the following command to start tomcat server and database server.
+Execute the following commands to start tomcat server and database server.
 
 ```bash
+# To destroy the old containers
+docker-compose down
+# To create the containers
 docker-compose up -d
 ```
 
