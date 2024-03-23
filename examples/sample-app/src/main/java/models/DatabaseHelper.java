@@ -35,7 +35,7 @@ public class DatabaseHelper {
   /**
    * @brief Get records from database
    * @param[in] String query SQL statement
-   * @return Resultset resultSet matched records
+   * @return ResultSet resultSet matched records
    */
   public ResultSet getRecords(String query) throws SQLException {
     Statement statement = connection.createStatement();
@@ -47,7 +47,7 @@ public class DatabaseHelper {
   /**
    * @brief Set records to database
    * @param[in] String query SQL statement
-   * @return Resultset resultSet ids of matched records
+   * @return ResultSet resultSet ids of matched records
    */
   public ResultSet setRecord(String query) throws SQLException {
     //! Assumption: The id has the attribute of AUTO_INCREMENT

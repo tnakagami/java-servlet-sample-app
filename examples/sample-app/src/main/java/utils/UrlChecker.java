@@ -11,7 +11,7 @@ public class UrlChecker {
   private final int INVALID_RECORD = -1;
   private final int CREATE_RECORD = 1;
   private final int UPDATE_RECORD = 2;
-  //! instance id
+  //! target record's id
   private int id;
   //! url status
   private int state;
@@ -31,8 +31,8 @@ public class UrlChecker {
     //! In the case of the partial match
     else {
       /**
-       *  Collation conditions: 
-       * 
+       *  Collation conditions:
+       *
        *  -# The 1st character is "/"
        *  -# After the 2nd character, the number must be at least one consecutive charactor
        *  -# The last character ends with "/" (or not)
@@ -48,7 +48,7 @@ public class UrlChecker {
   }
 
   /**
-   * @brief Get id of this instance
+   * @brief Get id of target record
    * @return int id
    */
   public int getID() {
