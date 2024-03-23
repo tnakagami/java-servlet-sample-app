@@ -50,14 +50,14 @@ Moreover, you have to also execute the following SQL statement to insert the rec
 INSERT INTO UserRole(type) values ('Admin'), ('Editor'), (default) ;
 ```
 
-In anticipation of the above work, I have created [`create-table-for-sample-app.sql`](create-table-for-sample-app.sql) with SQL statements.
+In anticipation of the above work, I have created [`for-sample-app.sql`](for-sample-app.sql) with SQL statements.
 
 In short, you will enter the following commands on your terminal.
 
 ```bash
 docker-compose up -d database-server
 sleep 3 # After waiting for few seconds...
-cat create-table-for-sample-app.sql | docker exec -i database-server /bin/bash -c 'cat - | sed -e "s|USE database|USE ${MYSQL_DATABASE}|" | mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD}'
+cat for-sample-app.sql | docker exec -i database-server /bin/bash -c 'cat - | sed -e "s|USE database|USE ${MYSQL_DATABASE}|" | mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD}'
 ```
 
 ### Step3: Copy source codes
