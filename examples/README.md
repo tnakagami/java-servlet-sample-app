@@ -1,19 +1,15 @@
 ## How to use this example of `sample-app`
 ### Step1: Create a database and an user to operate it
-Run the following command.
+Run the following commands, where you have to wait for about **10sec** to destroy the database-server's container.
 
 ```bash
 docker-compose up -d database-server
-```
-
-After waiting for about **15sec**, enter the next command to destroy the database-server's container.
-
-```bash
+sleep 10
 docker-compose down
 ```
 
 ### Step2: Create tables
-In this example, the `UserRole` table and `User` table consist of the following structure.
+In this example, the `UserRole` table and the `User` table consist of the following structure.
 
 #### `UserRole` table
 | Column name | Data type/Reference | Constraint                  | Default value |
@@ -56,14 +52,12 @@ INSERT INTO UserRole(type) values ('Admin'), ('Editor'), (default) ;
 
 In anticipation of the above work, I have created [`create-table-for-sample-app.sql`](create-table-for-sample-app.sql) with SQL statements.
 
-First, modify the database name in the first line of the SQL file.
-
-Next, enter the following command on your terminal.
+In short, you will enter the following commands on your terminal.
 
 ```bash
 docker-compose up -d database-server
-# After waiting for few seconds...
-cat create-table-for-sample-app.sql | docker exec -i database-server /bin/bash -c 'cat - | mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD}'
+sleep 3 # After waiting for few seconds...
+cat create-table-for-sample-app.sql | docker exec -i database-server /bin/bash -c 'cat - | sed -e "s|USE database|USE ${MYSQL_DATABASE}|" | mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD}'
 ```
 
 ### Step3: Copy source codes
