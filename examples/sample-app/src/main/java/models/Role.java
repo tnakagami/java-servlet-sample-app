@@ -45,6 +45,14 @@ public enum Role {
   }
 
   /**
+   * @brief Get default role
+   * @return Role role
+   */
+  public static Role getDefaultRole() {
+    return Role.Viewer;
+  }
+
+  /**
    * @brief Check input id
    * @param[in] id
    * @return boolean true  valid id
@@ -69,7 +77,7 @@ public enum Role {
    * @return Role result matched Role
    */
   public static Role getRole(int id) {
-    Role result = Role.Viewer;
+    Role result = Role.getDefaultRole();
 
     for (Role role: Role.values()) {
       if (role.getID() == id) {

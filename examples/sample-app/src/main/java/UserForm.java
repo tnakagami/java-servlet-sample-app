@@ -1,6 +1,10 @@
 package app.sample;
 
 import java.io.IOException;
+import java.lang.RuntimeException;
+import java.util.Objects;
+import java.util.List;
+import java.sql.SQLException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -8,12 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-import java.lang.RuntimeException;
-import java.util.Objects;
-import java.util.List;
 //! local package
-import app.sample.utils.ParseUrl;
+import app.sample.utils.UrlChecker;
 import app.sample.models.User;
 import app.sample.models.Role;
 
@@ -27,15 +27,15 @@ public class UserForm extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
 
-    //! Parse URL pattern
-    ParseUrl urlState = new ParseUrl(request.getPathInfo());
+    //! Check URL pattern
+    UrlChecker checker = new UrlChecker(request.getPathInfo());
     //! In the case of being set user id
-    if (!urlState.isInvalid()) {
+    if (!checker.isInvalid()) {
       String name = "";
-      Role role = Role.Viewer;
+      Role role = Role.getDefaultRole();
 
-      if (!urlState.isCreation()) {
-        List<User> users = User.getUsers(String.format("WHERE id = %d", urlState.getID()));
+      if (!checker.isCreation()) {
+        List<User> users = User.getUsers(String.format("WHERE id = %d", checker.getID()));
 
         //! In the case of valid user id
         if (users.size() > 0) {
@@ -74,19 +74,19 @@ public class UserForm extends HttpServlet {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
 
-    //! Parse URL pattern
-    ParseUrl urlState = new ParseUrl(request.getPathInfo());
+    //! Check URL pattern
+    UrlChecker checker = new UrlChecker(request.getPathInfo());
     //! Get parameters
     String name = request.getParameter("username");
     String _role = request.getParameter("role");
     //! Validation of parameters
-    if ((!urlState.isInvalid()) && (Objects.nonNull(_role))) {
+    if ((!checker.isInvalid()) && (Objects.nonNull(_role))) {
       int role = Integer.parseInt(_role);
-      int id = urlState.getID();
+      int id = checker.getID();
 
       try {
         //! In the case of creating user
-        if (urlState.isCreation()) {
+        if (checker.isCreation()) {
           User.createUser(name, role);
         }
         //! In the case of updating user information

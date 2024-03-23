@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
- * @brief Parse target url
+ * @brief Url Checker
  */
-public class ParseUrl {
+public class UrlChecker {
   private final int INVALID_RECORD = -1;
   private final int CREATE_RECORD = 1;
   private final int UPDATE_RECORD = 2;
@@ -20,20 +20,22 @@ public class ParseUrl {
    * @brief constructor
    * @param[in] String path target url
    */
-  public ParseUrl(String path) {
+  public UrlChecker(String path) {
     id = INVALID_RECORD;
     state = INVALID_RECORD;
 
+    //! In the case of the exact match
     if (Objects.isNull(path)) {
       state = CREATE_RECORD;
     }
+    //! In the case of the partial match
     else {
       /**
        *  Collation conditions: 
        * 
-       *  -# The 1st character is "/".
-       *  -# After the 2nd character, the number must be at least one consecutive charactor.
-       *  -# The last character ends with "/" (or not).
+       *  -# The 1st character is "/"
+       *  -# After the 2nd character, the number must be at least one consecutive charactor
+       *  -# The last character ends with "/" (or not)
        */
       Pattern pattern = Pattern.compile("^/([0-9]+)/?$");
       Matcher match = pattern.matcher(path);
