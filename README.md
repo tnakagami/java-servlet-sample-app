@@ -1,9 +1,9 @@
-# Java Servlet Sample app
+# [Java Servlet] sample-app
 ## Assumptions
-In this application, I assume the two conditions.
+In this document, the following two conditions are assumed to assure operation.
 
   1. The developers use the docker environment.
-  1. The host environment is Raspberry Pi 4 of armv7l version (32bit).
+  1. The host environment is Raspberry Pi 3 model B of armv7l version (32bit).
 
       Note: Please enter the command `uname -a` on your terminal to check kernel version.
 
@@ -26,10 +26,10 @@ In the host environment, enter the following command in your terminal.
 docker-compose run --rm maven-server /bin/bash
 ```
 
-Next, in the container (at docker environment), execute the following command, where the `groupId` and `artifactId` mean package name and architecture name.
+Next, in the container (i.e. docker environment), execute the following command, where the `groupId` and `artifactId` mean package name and architecture name.
 
 ```bash
-mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=sample-app -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp
+mvn archetype:generate -Duser.home=/var/maven -DgroupId=app.sample -DartifactId=sample-app -Dversion=1.0 -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
 ```
 
 | Item         | Detail            | Example      |
@@ -41,51 +41,51 @@ The execution results of the above command are shown below.
 
 ```bash
 # --- example of output ---
-#   [INFO] Using property: groupId = app.sample
-#   [INFO] Using property: artifactId = sample-app
-#   [INFO] Using property: version = 1.0
-#   [INFO] Using property: package = app.sample
-#   Confirm properties configuration:
-#   groupId: app.sample
-#   artifactId: sample-app
-#   version: 1.0
-#   package: app.sample
-#    Y: :
-
-# *** Press the Enter key ***
-
-#   [INFO] ----------------------------------------------------------------------------
-#   [INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-webapp:1.0
-#   [INFO] ----------------------------------------------------------------------------
-#   [INFO] Parameter: basedir, Value: /var/maven/app
-#   [INFO] Parameter: package, Value: sample.app
-#   [INFO] Parameter: groupId, Value: sample.app
-#   [INFO] Parameter: artifactId, Value: sample-app
-#   [INFO] Parameter: packageName, Value: sample.app
-#   [INFO] Parameter: version, Value: 1.0
-#   [INFO] project created from Old (1.x) Archetype in dir: /var/maven/app/sample-app
-#   [INFO] ------------------------------------------------------------------------
-#   [INFO] BUILD SUCCESS
-#   [INFO] ------------------------------------------------------------------------
-#   [INFO] Total time:  55.555 s
-#   [INFO] Finished at: 2000-03-31T11:11:11Z
-#   [INFO] ------------------------------------------------------------------------
+#
+# [INFO] Scanning for projects...
+# [INFO]
+# [INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+# [INFO] Building Maven Stub Project (No POM) 1
+# [INFO] --------------------------------[ pom ]---------------------------------
+# [INFO]
+# [INFO] >>> archetype:3.2.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+# [INFO]
+# [INFO] <<< archetype:3.2.1:generate (default-cli) < generate-sources @ standalone-pom <<<
+# [INFO]
+# [INFO]
+# [INFO] --- archetype:3.2.1:generate (default-cli) @ standalone-pom ---
+# [INFO] Generating project in Batch mode
+# [INFO] ----------------------------------------------------------------------------
+# [INFO] Using following parameters for creating project from Old (1.x) Archetype: maven-archetype-webapp:1.0
+# [INFO] ----------------------------------------------------------------------------
+# [INFO] Parameter: basedir, Value: /var/maven/app
+# [INFO] Parameter: package, Value: app.sample
+# [INFO] Parameter: groupId, Value: app.sample
+# [INFO] Parameter: artifactId, Value: sample-app
+# [INFO] Parameter: packageName, Value: app.sample
+# [INFO] Parameter: version, Value: 1.0
+# [INFO] project created from Old (1.x) Archetype in dir: /var/maven/app/sample-app
+# [INFO] ------------------------------------------------------------------------
+# [INFO] BUILD SUCCESS
+# [INFO] ------------------------------------------------------------------------
+# [INFO] Total time:  55.555 s
+# [INFO] Finished at: 2000-03-31T11:11:11Z
+# [INFO] ------------------------------------------------------------------------
+#
 # --- end of output ---
 ```
 
 Then, to come back to the host environment, type `exit` or press `Ctrl + D`.
 
 ### Step4: Setup the project to use maven
-In the host environment, to change directory and create directories, enter the following commands in your terminal.
+In the host environment, enter the following commands in your terminal to change directory and create directories.
 
 ```bash
 cd maven/project/sample-app
 mkdir -p src/main/java
 ```
 
-Next, open `pom.xml` file on your favorite editor. (In my case, I will use "vim".)
-
-Then, add these sentences between `<dependencies>` and `</dependencies>`.
+Next, open `pom.xml` file on your favorite editor (`vim pom.xml` in my case) and add these sentences between `<dependencies>` and `</dependencies>`.
 
 ```xml
     <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->

@@ -5,7 +5,6 @@ import java.lang.RuntimeException;
 import java.util.Objects;
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 //! local package
@@ -78,7 +77,7 @@ public class User implements Serializable {
     User user = new User(name, role);
     String sql = String.format("INSERT INTO User (name, role) values ('%s', %d) ;", user.name, user.role.getID());
     ResultSet resultSet = helper.setRecord(sql);
-    //! Extract user's id from the inserted record.
+    //! Extract user's id from the inserted record
     if (resultSet.next()) {
       user.id = resultSet.getInt(1);
     }
@@ -112,7 +111,7 @@ public class User implements Serializable {
     ResultSet resultSet = helper.getRecords(sql);
     String name = null;
 
-    //! Extract username from the collected record.
+    //! Extract username from the collected record
     if (resultSet.next()) {
       name = resultSet.getString("name");
     }

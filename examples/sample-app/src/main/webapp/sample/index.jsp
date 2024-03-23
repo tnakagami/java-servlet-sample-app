@@ -1,13 +1,4 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="/header.jsp" flush="true" />
-<%@ page import="app.sample.models.User" %>
-<%@ page import="java.util.Formatter" %>
-<%@ page import="java.util.List" %>
-<%
-  request.setCharacterEncoding("UTF8");
-  List<User> users = (List<User>)request.getAttribute("users");
-  Formatter formatter = new Formatter(out);
-%>
+<%@ include file="/header.jsp" %>
 <div class="p-4">
   <div class="row mt-2">
     <div class="col">
@@ -24,25 +15,28 @@
       <div class="row row-cols-1 row-cols-md-3 g-2 mt-2">
         <div class="col">
           <select name="user-list" class="form-select" aria-label="User list">
-            <%
-              for (User user: users) {
-                formatter.format("<option value=\"%d\">%s</option>", user.getID(), user.getName());
-              }
-            %>
+            <c:forEach var="user" items="${users}">
+              <option value='<c:out value="${user.getID()}" />'>
+                <c:out value="${user.getName()}" />
+              </option>
+            </c:forEach>
           </select>
         </div>
         <div class="col">
-          <%
-            String urlPattern = "#";
-
-            if (users.size() > 0) {
-              User user = users.get(0);
-              urlPattern = String.format("/sample-app/user/%d", user.getID());
-            }
-          %>
-          <a href="<%= urlPattern %>" id="update-user" class="btn btn-primary w-100 custom-boxshadow-effect">
+          <%-- Set URL of the user form to "updateUserUrl" variable --%>
+          <c:choose>
+            <c:when test="${users.size() > 0}">
+              <c:set var="updateUserUrl" scope="page">/sample-app/user/${users.get(0).getID()}</c:set>
+            </c:when>
+            <c:otherwise>
+              <c:set var="updateUserUrl" scope="page">#</c:set>
+            </c:otherwise>
+          </c:choose>
+          <a href="${updateUserUrl}" id="update-user" class="btn btn-primary w-100 custom-boxshadow-effect">
             Update user's information
           </a>
+          <%-- Remove "updateUserUrl" variable --%>
+          <c:remove var="updateUserUrl" scope="page" />
         </div>
         <div class="col">
           <a href="/sample-app/user/create-user" class="btn btn-success w-100 custom-boxshadow-effect">
@@ -61,14 +55,14 @@
     };
     for (const tagID of Object.keys(menus)) {
       const target = menus[tagID];
-      const element = document.querySelector(`select[name="${target.name}"]`);
+      const element = document.querySelector('select[name="' + target.name + '"]');
       element.addEventListener('change', (event) => {
         const value = event.target.value;
-        const _tag = document.querySelector(`#${tagID}`);
-        _tag.href = `${target.prefix}/${value}`;
+        const _tag = document.querySelector('#' + tagID);
+        _tag.href = target.prefix + '/' + value;
       });
     }
   })();
 </script>
 
-<jsp:include page="/footer.jsp" />
+<%@ include file="/footer.jsp" %>

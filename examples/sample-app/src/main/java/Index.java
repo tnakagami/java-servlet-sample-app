@@ -1,6 +1,7 @@
 package app.sample;
 
 import java.io.IOException;
+import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -8,9 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 //! local package
-import app.sample.models.*;
+import app.sample.models.User;
 
 @WebServlet(name="Index", urlPatterns={"/"})
 public class Index extends HttpServlet {

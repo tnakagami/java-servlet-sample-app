@@ -1,15 +1,15 @@
 package app.sample.models;
 
+import java.lang.ClassNotFoundException;
+import java.util.Objects;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import java.lang.ClassNotFoundException;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class DatabaseHelper {
-  // In the case of that the version of "mysql-connector-j" is "8.x".
+  // In the case of that the version of "mysql-connector-j" is "8.x"
   private final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
   private final String JDBC_CONNECTION = String.format("jdbc:mysql://%s:3306/%s", System.getenv("SERVLET_DATABASE_HOST"), System.getenv("MYSQL_DATABASE"));
   private final String USERNAME = System.getenv("MYSQL_USER");
@@ -22,9 +22,9 @@ public class DatabaseHelper {
    */
   private DatabaseHelper() {
     try {
-      // Connect to MySQL
+      //! Connect to MySQL
       Class.forName(MYSQL_DRIVER);
-      // Connect to database
+      //! Connect to database
       connection = DriverManager.getConnection(JDBC_CONNECTION, USERNAME, PASSWORD);
     }
     catch (ClassNotFoundException|SQLException ex) {
@@ -50,7 +50,7 @@ public class DatabaseHelper {
    * @return Resultset resultSet ids of matched records
    */
   public ResultSet setRecord(String query) throws SQLException {
-    //! Assumption: the id has the attribute of AUTO_INCREMENT.
+    //! Assumption: The id has the attribute of AUTO_INCREMENT
     Statement statement = connection.createStatement();
     statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
     ResultSet resultSet = statement.getGeneratedKeys();

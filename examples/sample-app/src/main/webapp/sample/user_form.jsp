@@ -1,18 +1,4 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<jsp:include page="/header.jsp" flush="true" />
-<%@ page import="app.sample.models.Role" %>
-<%@ page import="java.util.Formatter" %>
-<%@ page import="java.util.Objects" %>
-<%@ page import="java.util.List" %>
-
-<%
-  request.setCharacterEncoding("UTF8");
-  String error = (String)request.getAttribute("error");
-  String action = (String)request.getAttribute("action");
-  String name = (String)request.getAttribute("name");
-  Role role = (Role)request.getAttribute("role");
-%>
-
+<%@ include file="/header.jsp" %>
 <div class="p-4">
   <div class="row mt-2">
     <div class="col">
@@ -21,33 +7,31 @@
   </div>
   <div class="row p-2">
     <div class="col">
-      <form action="<%= action %>" method="POST">
-        <% if (Objects.nonNull(error)) { %>
-        <div class="row mt-2">
-          <div class="col">
-            <strong class="error-message">Error: <%= error %></strong>
+      <form action="${action}" method="POST">
+        <c:if test="${not empty error}">
+          <div class="row mt-2">
+            <div class="col">
+              <strong class="error-message">Error: ${error}</strong>
+            </div>
           </div>
-        </div>
-        <% } %>
+        </c:if>
         <div class="row row-cols-1 g-2 mt-2">
           <div class="col">
             <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" value="<%= name %>" placeholder="Enter the username" />
+            <input type="text" class="form-control" id="username" name="username" value="${name}" placeholder="Enter the username" />
           </div>
           <div class="col">
             <label for="role" class="form-label">Role</label>
             <select name="role" id="role" class="form-select" aria-label="Role lists">
-              <%
-                List<Role> roles = (List<Role>)request.getAttribute("roles");
-                Formatter formatter = new Formatter(out);
-                int defaultId = role.getID();
-
-                for (Role target : roles) {
-                  int id = target.getID();
-                  String attrName = (defaultId == id) ? "selected" : "";
-                  formatter.format("<option value=\"%d\" %s>%s</option>", id, attrName, target.getLabel());
-                }
-              %>
+              <c:set var="defaultID" scope="page">${role.getID()}</c:set>
+              <c:forEach var="target" items="${roles}">
+                <c:set var="targetID" scope="page">${target.getID()}</c:set>
+                <option value='<c:out value="${targetID}" />' <c:if test="${defaultID == targetID}">selected</c:if>>
+                  ${target.getLabel()}
+                </option>
+                <c:remove var="targetID" scope="page" />
+              </c:forEach>
+              <c:remove var="defaultID" scope="page" />
             </select>
           </div>
         </div>
@@ -68,4 +52,4 @@
   </div>
 </div>
 
-<jsp:include page="/footer.jsp" />
+<%@ include file="/footer.jsp" %>
