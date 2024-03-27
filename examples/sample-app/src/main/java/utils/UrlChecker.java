@@ -60,8 +60,8 @@ public class UrlChecker {
    * @return boolean true valid url
    * @return boolean false invalid url
    */
-  public boolean isInvalid() {
-    return (INVALID_RECORD == state);
+  public boolean isValid() {
+    return (INVALID_RECORD != state);
   }
 
   /**
