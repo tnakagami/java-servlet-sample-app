@@ -59,7 +59,7 @@ class DatabaseHelper {
 public class QueryManager implements Closeable {
   private Statement statement;
   private ResultSet resultSet;
-    //! helper instance
+  //! helper instance
   private static DatabaseHelper helper = DatabaseHelper.getInstance();
 
   /**
