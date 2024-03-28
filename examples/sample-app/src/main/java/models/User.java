@@ -1,14 +1,16 @@
 package app.sample.models;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.NoSuchMethodException;
+import java.lang.IllegalAccessException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.RuntimeException;
 import java.util.Objects;
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-//! local package
-import app.sample.models.Role;
 
 public class User implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -18,29 +20,105 @@ public class User implements Serializable {
   //! username
   private String name;
   //! user's role
+  private int roleID;
   private Role role;
-  //! helper instance
-  private static DatabaseHelper helper = DatabaseHelper.getInstance();
+  //! validation functions
+  private String[] validators = new String[] {"nameValidator", "roleValidator"};
+
+  // ========================
+  // ===== Constructors =====
+  // ========================
+  /**
+   * @brief constructor
+   */
+  public User() {
+    id = 0;
+    name = "";
+    role = Role.getDefaultRole();
+    roleID = role.getID();
+  }
 
   /**
    * @brief constructor
-   * @param[in] String name username
-   * @param[in] int role role id
+   * @param[in] int id user id
    */
-  public User(String name, int role) throws RuntimeException {
-    //! Validation of username and user's role
+  public User(int id) throws RuntimeException, IOException {
+    List<User> users = User.getUsers(String.format("WHERE id = %d", id));
+
+    //! Extract username from the collected record
+    if (users.size() > 0) {
+      User user = users.get(0);
+      this.id = user.getID();
+      name = user.getName();
+      role = user.getRole();
+      roleID = role.getID();
+    }
+    else {
+      throw new RuntimeException(String.format("Invalid user id (id: %d)", id));
+    }
+  }
+
+  // ======================
+  // ===== Validators =====
+  // ======================
+  /**
+   * @brief Validate model's variables
+   */
+  public List<String> clean() {
+    List<String> errors = new ArrayList<String>();
+    Class<?> current = this.getClass();
+
+    for (String functionName: validators) {
+      try {
+        Method method = current.getDeclaredMethod(functionName);
+        method.setAccessible(true);
+        method.invoke(this);
+      }
+      catch (NoSuchMethodException|IllegalAccessException ex) {
+        ex.printStackTrace();
+      }
+      catch (InvocationTargetException ex) {
+        String err = ex.getCause().getMessage();
+        errors.add(err);
+      }
+    }
+
+    return errors;
+  }
+
+  /**
+   * @brief Validate username
+   */
+  private void nameValidator() throws RuntimeException {
+    //! Validation of username
     if (Objects.isNull(name)) {
       throw new RuntimeException("Invalid username: username is null.");
     }
     if ((0 == name.length()) || (name.length() > MAX_USERNAME_LEN)) {
       throw new RuntimeException(String.format("Invalid username's length (length: %d)", name.length()));
     }
-    if (!Role.checkID(role)) {
-      throw new RuntimeException(String.format("Invalid user's role (id: %d)", role));
+  }
+
+  /**
+   * @brief Validate user's role
+   */
+  private void roleValidator() throws RuntimeException {
+    //! Validation of user's role
+    if (!Role.validID(roleID)) {
+      throw new RuntimeException(String.format("Invalid user's role (id: %d)", roleID));
     }
-    id = 0;
-    this.name = name;
-    this.role = Role.getRole(role);
+    setRole(roleID);
+  }
+
+  // ===============================
+  // ===== Setters and Getters =====
+  // ===============================
+  /**
+   * @brief Set user id
+   * @param[in] String id user id
+   */
+  private void setID(int id) {
+    this.id = id;
   }
 
   /**
@@ -52,11 +130,41 @@ public class User implements Serializable {
   }
 
   /**
+   * @brief Set username
+   * @param[in] String name username
+   */
+  public void setName(String name) {
+    this.name = name.trim();
+  }
+
+  /**
    * @brief Get username
    * @return String name
    */
   public String getName() {
     return name;
+  }
+
+  /**
+   * @brief Set role
+   * @param[in] String roleID user's role id
+   */
+  public void setRole(String roleID) throws RuntimeException {
+    try {
+      this.roleID = Integer.parseInt(roleID);
+    }
+    catch (RuntimeException ex) {
+      throw new RuntimeException("Failed to set role");
+    }
+  }
+
+  /**
+   * @brief Set role
+   * @param[in] int role user's role id
+   */
+  private void setRole(int role) {
+    this.role = Role.getRole(role);
+    roleID = role;
   }
 
   /**
@@ -68,83 +176,56 @@ public class User implements Serializable {
   }
 
   /**
-   * @brief The function to create user
-   * @param[in] String name username
-   * @param[in] int role user's role
-   * @return User matched user's instance
+   * @brief The function to save model data to database
+   * @param[in] boolean isCreation in the case of creating record
    */
-  public static User createUser(String name, int role) throws RuntimeException, SQLException {
-    User user = new User(name, role);
-    String sql = String.format("INSERT INTO User (name, role) values ('%s', %d) ;", user.name, user.role.getID());
-    ResultSet resultSet = helper.setRecord(sql);
-    //! Extract user's id from the inserted record
-    if (resultSet.next()) {
-      user.id = resultSet.getInt(1);
+  public void save(boolean isCreation) throws SQLException, IOException {
+    try (QueryManager manager = new QueryManager()) {
+      //! In the case of creating the user
+      if (isCreation) {
+        String sql = String.format("INSERT INTO User (name, role) VALUES ('%s', %d) ;", name, roleID);
+        manager.execUpdate(sql);
+        //! Extract user's id from the inserted record
+        if (manager.next()) {
+          setID(manager.getInt(1));
+        }
+      }
+      //! In the case of updating the user information
+      else {
+        String sql = String.format("UPDATE User SET name='%s', role=%d WHERE id = %d ;", name, roleID, id);
+        manager.execUpdate(sql);
+      }
     }
-
-    return user;
   }
 
-  /**
-   * @brief The function to update user's information
-   * @param[in] int id user id
-   * @param[in] String name username
-   * @param[in] int role user's role
-   * @return User matched user's instance
-   */
-  public static User updateUser(int id, String name, int role) throws RuntimeException, SQLException {
-    User user = new User(name, role);
-    String sql = String.format("UPDATE User SET name='%s', role=%d WHERE id = %d ;", user.name, user.role.getID(), id);
-    helper.setRecord(sql);
-    user.id = id;
-
-    return user;
-  }
-
-  /**
-   * @brief The function to get username
-   * @param[in] int id user id
-   * @return String name username (may be null)
-   */
-  public static String getName(int id) throws SQLException {
-    String sql = String.format("SELECT name FROM User WHERE id = %d ;", id);
-    ResultSet resultSet = helper.getRecords(sql);
-    String name = null;
-
-    //! Extract username from the collected record
-    if (resultSet.next()) {
-      name = resultSet.getString("name");
-    }
-
-    return name;
-  }
-
+  // ============================
+  // ===== Static functions =====
+  // ============================
   /**
    * @brief The function to collect the users registered to database
    * @param[in] String condition extracted condition
    * @return List<User> users list of the matched users
    */
-  public static List<User> getUsers(String condition) {
+  public static List<User> getUsers(String condition) throws IOException {
     List<User> users = new ArrayList<User>();
 
-    try {
+    try (QueryManager manager = new QueryManager()) {
       String sql = String.format("SELECT * FROM User %s ;", condition);
-      ResultSet resultSet = helper.getRecords(sql);
+      manager.execSelect(sql);
 
       //! Convert the records to User's instances
-      while (resultSet.next()) {
-        //! Extract data from target record
-        int id = resultSet.getInt("id");
-        String name = resultSet.getString("name");
-        int role = resultSet.getInt("role");
+      while (manager.next()) {
         //! Create User's instance
-        User user = new User(name, role);
-        user.id = id;
+        User user = new User();
+        //! Extract data from target record
+        user.setID(manager.getInt("id"));
+        user.setName(manager.getString("name"));
+        user.setRole(manager.getInt("role"));
         //! Add instance to list
         users.add(user);
       }
     }
-    catch(SQLException|RuntimeException  ex) {
+    catch(SQLException|RuntimeException ex) {
       ex.printStackTrace();
     }
 

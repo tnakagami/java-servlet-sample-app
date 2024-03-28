@@ -48,7 +48,7 @@ public enum Role {
    * @brief Get default role
    * @return Role role
    */
-  public static Role getDefaultRole() {
+  protected static Role getDefaultRole() {
     return Role.Viewer;
   }
 
@@ -58,7 +58,7 @@ public enum Role {
    * @return boolean true  valid id
    * @return boolean false invalid id
    */
-  public static boolean checkID(int id) {
+  protected static boolean validID(int id) {
     boolean isValid = false;
 
     for (Role role: Role.values()) {

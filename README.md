@@ -161,6 +161,38 @@ Also add these following sentences between `<build>` and `</build>`.
           <target>17</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>io.leonard.maven.plugins</groupId>
+        <artifactId>jspc-maven-plugin</artifactId>
+        <version>4.2.0</version>
+        <executions>
+          <execution>
+            <id>jspc</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration />
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper</artifactId>
+            <version>10.1.18</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.eclipse.jdt</groupId>
+                <artifactId>ecj</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>ecj</artifactId>
+            <version>3.36.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
 ```
 
