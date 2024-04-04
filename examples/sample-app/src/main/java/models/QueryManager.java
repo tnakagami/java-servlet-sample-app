@@ -78,32 +78,28 @@ public class QueryManager implements Closeable {
    */
   @Override
   public void close() throws IOException {
-    try {
-      if (Objects.nonNull(resultSet)) {
-        resultSet.close();
-      }
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally {
+    if (Objects.nonNull(resultSet)) {
       try {
-        if (Objects.nonNull(statement)) {
-          statement.close();
-        }
+        resultSet.close();
       }
       catch (SQLException ex) {
         ex.printStackTrace();
       }
-      finally {
-        try {
-          if (Objects.nonNull(connection)) {
-            connection.close();
-          }
-        }
-        catch (SQLException ex) {
-          ex.printStackTrace();
-        }
+    }
+    if (Objects.nonNull(statement)) {
+      try {
+        statement.close();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    }
+    if (Objects.nonNull(connection)) {
+      try {
+        connection.close();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
       }
     }
   }
