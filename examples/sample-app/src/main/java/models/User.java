@@ -97,6 +97,7 @@ public class User implements Serializable {
     if ((0 == name.length()) || (name.length() > MAX_USERNAME_LEN)) {
       throw new RuntimeException(String.format("Invalid username's length (length: %d)", name.length()));
     }
+    name = name.trim();
   }
 
   /**
@@ -134,7 +135,7 @@ public class User implements Serializable {
    * @param[in] String name username
    */
   public void setName(String name) {
-    this.name = name.trim();
+    this.name = name;
   }
 
   /**

@@ -15,6 +15,8 @@ import app.sample.forms.UserModelForm;
 
 @WebServlet(name="UserUpdationForm", urlPatterns={"/user/*"})
 public class UserUpdationForm extends HttpServlet {
+  Pattern pattern = Pattern.compile("^/([0-9]+)/?$");
+
   private int getInstanceID(String path) throws RuntimeException {
     /**
      *  Collation conditions:
@@ -23,7 +25,6 @@ public class UserUpdationForm extends HttpServlet {
      *  -# After the 2nd character, the number must be at least one consecutive charactor
      *  -# The last character ends with "/" (or not)
      */
-    Pattern pattern = Pattern.compile("^/([0-9]+)/?$");
     Matcher match = pattern.matcher(path);
     int id;
 
